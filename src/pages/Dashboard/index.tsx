@@ -7,6 +7,9 @@ import api from '../../services/api';
 import Food from '../../components/Food';
 import ModalAddFood from '../../components/ModalAddFood';
 import ModalEditFood from '../../components/ModalEditFood';
+import Modal from '../../components/Modal';
+
+import confirmacao from '../../assets/Vector.svg';
 
 import { FoodsContainer } from './styles';
 
@@ -24,6 +27,7 @@ const Dashboard: React.FC = () => {
   const [editingFood, setEditingFood] = useState<IFoodPlate>({} as IFoodPlate);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [confirmation, setConfirmation] = useState(false);
 
   useEffect(() => {
     async function loadFoods(): Promise<void> {
@@ -51,6 +55,7 @@ const Dashboard: React.FC = () => {
       }
       await api.post('/foods', newFood);
       setFoods([...foods, newFood]);
+      setConfirmation(!confirmation);
     } catch (err) {
       console.log(err);
     }
@@ -96,6 +101,10 @@ const Dashboard: React.FC = () => {
     toggleEditModal();
   }
 
+  function toggleConfirmacao(): void {
+    setConfirmation(!confirmation)
+  }
+
   return (
     <>
       <Header openModal={toggleModal} />
@@ -123,6 +132,35 @@ const Dashboard: React.FC = () => {
             />
           ))}
       </FoodsContainer>
+
+      <Modal
+        isOpen={confirmation}
+        setIsOpen={toggleConfirmacao}
+      >
+        <div style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'center', justifyItems: 'center'
+        }}>
+          <img src={confirmacao} alt="conformação" style={{
+            left: '7.81%',
+            right: '7.81%',
+            top: '7.81%',
+            bottom: '7.81%',
+          }} />
+          <p style={{
+            left: '0px',
+            top: '72px',
+            fontFamily: 'Roboto',
+            fontStyle: 'normal',
+            fontWeight: 'bold',
+            fontSize: '24px',
+            lineHeight: '28px',
+            color: '#00000',
+            textAlign: 'center'
+          }}>
+            Prato adicionado!
+          </p>
+        </div>
+      </Modal>
     </>
   );
 };
